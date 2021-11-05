@@ -1,38 +1,41 @@
-import threading as th
+import socket
+import threading
 import sys
-import socket as sck
 import pickle
 import os
 
+
 class Servidor():
-	def __init__(self, host=sck.gethostname(), port = input("Escribe el puerto: ")):
+	def __init__(self, host=socket.gethostname(), port = input("Escribe el puerto que desea utilizar para el acceso al servidor: ")):
 		self.clientes = []
 		self.mensajes = []
-		print("La ip del servidor es: " + sck.gethostbyname(host))
-		self.sock = sck.socket()
+		print("La ip del servidor es: " + socket.gethostbyname(host))
+		self.sock = socket.socket()
 		self.sock.bind((str(host), int(port)))
 		self.sock.listen(20)
 		self.sock.setblocking(False)
 
-		aceptar = th.Thread(target=self.aceptarConex)
-		procesar = th.Thread(target=self.procesarConex)
+		aceptar = threading.Thread(target=self.aceptarC)
+		procesar = threading.Thread(target=self.procesarC)
+
 
 		aceptar.daemon = True
 		aceptar.start()
+
 		procesar.daemon = True
 		procesar.start()
+
 		
-		for thread in th.enumerate():
+		for thread in threading.enumerate():
 			print("Hilo: " + thread.name + "\n"
-			    + "Proceso PID: "+ str(os.getpid()) + "\n"
-			 	+ "Daemon: " + str(thread.daemon) +  "\n")
-		print("Hilos totales: " + str((th.activeCount()-1)))
+				+ "Proceso PID: "+ str(os.getpid()) + "\n"
+				+ "Daemon: " + str(thread.daemon) +  "\n")
+		print("Hilos totales: " + str((threading.activeCount()-1)))
 
 		while True:
-			mensaje = input('SALIR = Q\n')
-			if mensaje == 'Q':
-				print("Hasta luego!")
-				print("**** Cerrando Servidor... *****")
+			msg = input('SALIR = Q\n')
+			if msg == 'Q':
+				print("**** CERRANDO SERVIDOR... *****")
 				self.sock.close()
 				sys.exit()
 			else:
@@ -40,21 +43,22 @@ class Servidor():
 
 				
 
-	def broadcast(self, mensaje, cliente):
+	def broadcast(self, msg, cliente):
 		archivo = open("MessagesLog.txt")
-		self.mensajes.append(pickle.loads(mensaje))
-		print("Los mensajes actuales: " + str(pickle.loads(mensaje)))
+		self.mensajes.append(pickle.loads(msg))
+		print("Los mensajes actuales: " + str(pickle.loads(msg)))
 		print("Los mensajes totales: " + str(self.mensajes))
 		
 		for c in self.clientes:
 			try:
 				if c != cliente:
-					archivo.write
-					c.send(mensaje)
+					archivo.write(str(msg))
+					c.send(msg)
+					archivo.close()
 			except:
 				self.clientes.remove(c)
 
-	def aceptarConex(self):
+	def aceptarC(self):
 		while True:
 			try:
 				conn, addr = self.sock.accept()
@@ -62,12 +66,12 @@ class Servidor():
 				conn.setblocking(False)
 				self.clientes.append(conn)
 				for client in self.clientes: 
-					data = pickle.dumps(client.usuario + 'connected')
-					self.broadcast(data,client);  
+					data = pickle.dumps(client.username + 'connected')
+					self.broadcast(data,c);  
 			except:
 				pass
 
-	def procesarConex(self):
+	def procesarC(self):
 		
 		while True:
 			if len(self.clientes) > 0:

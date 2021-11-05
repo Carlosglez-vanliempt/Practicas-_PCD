@@ -1,43 +1,36 @@
-import threading as th
+import threading
 import sys
-import socket as sck
+import socket
 import pickle
 import os
 
 class Cliente():
 
-	def __init__(self, host= input("Escriba la IP del servidor al que quiere conectarse: "), port= input("Escriba el puerto con el qeu desea conectarse: ")):
-		self.sock = sck.socket()
-		usuario = input('Introduzca su nombre de usuario: ')
+	# def __init__(self, host = '10.34.84.147', port=61000):
+	def __init__(self, host= input("Escriba la IP a la que desea conectarse: "), port= input("Escriba el puerto con el que desea conectarse: ")):
+		self.sock = socket.socket()
+		username = input('Usuario: ')
 		self.sock.connect((str(host), int(port)))
-		hiloRecibirMensaje = th.Thread(target=self.recibirMensaje)
-		hiloRecibirMensaje.daemon = True
-		hiloRecibirMensaje.start()
+		hilo_recv_mensaje = threading.Thread(target=self.recibir)
+		hilo_recv_mensaje.daemon = True
+		hilo_recv_mensaje.start()
 		
-		for thread in th.enumerate():
-			print("Hilo: " + thread.name + "\n"
-				+ "Proceso PID: "+ str(os.getpid()) + "\n" 
-				+ "Daemon: " + str(thread.daemon) +  "\n")
-		print("Hilos totales: " + str((th.activeCount()-1)))
+		for thread in threading.enumerate():
+			print("Hilo: " + thread.name + "\n" + "Proceso PID: "+ str(os.getpid()) + "\n" + "Daemon: " + str(thread.daemon) +  "\n")
+		print("Hilos totales: " + str(threading.activeCount()-1))
 
-		self.enviarMensaje("<" + usuario + "> se ha conectado")
+		self.enviar("<" + username + "> se ha conectado")
 		while True:
-			mensaje = input('\nEscriba texto ? ** Enviar = ENTER ** Abandonar Chat = Q \n')
-			mensaje = input("\n>>\n")
-			if mensaje != 'Q' :
-				self.enviarMensaje(usuario + ": " + mensaje)
+			# msg = input('\nEscriba texto ? ** Enviar = ENTER ** Abandonar Chat = Q \n')
+			msg = input("\n>>\n")
+			if msg != 'Q' :
+				self.enviar(username + ": " + msg)
 			else:
 				print(" ****Saliendo del chat...****")
 				self.sock.close()
 				sys.exit()
 
-	def enviarMensaje(self, mensaje):
-		self.sock.send(pickle.dumps(mensaje))
-		data = pickle.dumps(mensaje)
-		if data: 
-			print(pickle.loads(data))
-
-	def recibirMensaje(self):
+	def recibir(self):
 		while True:
 			try:
 				data = self.sock.recv(1024)
@@ -45,5 +38,10 @@ class Cliente():
 					print(pickle.loads(data))
 			except:
 				pass
-	
+
+	def enviar(self, msg):
+		self.sock.send(pickle.dumps(msg))
+		data = pickle.dumps(msg)
+		if data: 
+			print(pickle.loads(data))
 c = Cliente()
