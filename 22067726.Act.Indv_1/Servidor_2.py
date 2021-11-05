@@ -67,7 +67,7 @@ class Servidor():
 				self.clientes.append(conn)
 				for client in self.clientes: 
 					data = pickle.dumps(client.username + 'connected')
-					self.broadcast(data,c);  
+					self.broadcast(data,client);  
 			except:
 				pass
 
