@@ -5,11 +5,14 @@ import pickle
 import os
 
 
+#puertos desde los 7000 (los anteriores se usan para cosas internas de os)
+
+
 class Servidor():
-	def __init__(self, host=socket.gethostname(), port = input("Escribe el puerto que desea utilizar para el acceso al servidor: ")):
+	def __init__(self, host=socket.gethostname(), port = input("Escribe el puerto: ")):
 		self.clientes = []
 		self.mensajes = []
-		print("La ip del servidor es: " + socket.gethostbyname(host))
+		print("Tu ip es: " + socket.gethostbyname(host))
 		self.sock = socket.socket()
 		self.sock.bind((str(host), int(port)))
 		self.sock.listen(20)
@@ -27,15 +30,13 @@ class Servidor():
 
 		
 		for thread in threading.enumerate():
-			print("Hilo: " + thread.name + "\n"
-				+ "Proceso PID: "+ str(os.getpid()) + "\n"
-				+ "Daemon: " + str(thread.daemon) +  "\n")
-		print("Hilos totales: " + str((threading.activeCount()-1)))
+			print("Hilo: " + thread.name + "\n" + "Proceso PID: "+ str(os.getpid()) + "\n" + "Daemon: " + str(thread.daemon) +  "\n")
+		print("Hilos totales: " + str(threading.activeCount()-1))
 
 		while True:
 			msg = input('SALIR = Q\n')
 			if msg == 'Q':
-				print("**** CERRANDO SERVIDOR... *****")
+				print("**** SERVER CLOSED *****")
 				self.sock.close()
 				sys.exit()
 			else:
@@ -44,7 +45,6 @@ class Servidor():
 				
 
 	def broadcast(self, msg, cliente):
-		archivo = open("MessagesLog.txt")
 		self.mensajes.append(pickle.loads(msg))
 		print("Los mensajes actuales: " + str(pickle.loads(msg)))
 		print("Los mensajes totales: " + str(self.mensajes))
@@ -52,9 +52,7 @@ class Servidor():
 		for c in self.clientes:
 			try:
 				if c != cliente:
-					archivo.write(str(msg))
 					c.send(msg)
-					archivo.close()
 			except:
 				self.clientes.remove(c)
 

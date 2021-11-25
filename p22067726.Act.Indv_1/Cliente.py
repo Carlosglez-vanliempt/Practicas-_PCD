@@ -7,9 +7,9 @@ import os
 class Cliente():
 
 	# def __init__(self, host = '10.34.84.147', port=61000):
-	def __init__(self, host= input("Escriba la IP a la que desea conectarse: "), port= input("Escriba el puerto con el que desea conectarse: ")):
+	def __init__(self, host= input("Escriba la IP: "), port= input("Escriba el puerto: ")):
 		self.sock = socket.socket()
-		username = input('Usuario: ')
+		username = input('Username: ')
 		self.sock.connect((str(host), int(port)))
 		hilo_recv_mensaje = threading.Thread(target=self.recibir)
 		hilo_recv_mensaje.daemon = True
@@ -26,7 +26,7 @@ class Cliente():
 			if msg != 'Q' :
 				self.enviar(username + ": " + msg)
 			else:
-				print(" ****Saliendo del chat...****")
+				print(" ****LOGOUT****")
 				self.sock.close()
 				sys.exit()
 
