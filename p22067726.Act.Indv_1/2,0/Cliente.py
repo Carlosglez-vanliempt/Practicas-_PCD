@@ -3,7 +3,6 @@ import sys
 import socket
 import pickle
 import os
-import pyrebase
 
 class Cliente():
     host_ = input("Escribe la direccion ip que desee conectarse a: ")
