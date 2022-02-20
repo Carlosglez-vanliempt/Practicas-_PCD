@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Covid APP: Sube tu pasaporte COVID</title>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="navbar">
+            <a href="index.html"><img class="logo" src="logo.png"></a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a class="active" href="scanView.html">Subir Passaporte COVID</a></li>
+            </ul>
+        </nav>
+        <div class="center">
+            <form class="p" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                Sube tu pasaporte COVID:
+                {{ form.as_p }}
+                <input type="submit" value="Submit"><br><br>
+            </form>
+    </div>
+    </div>
+</body>
+</html>

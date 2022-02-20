@@ -1,0 +1,48 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CovidApp</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div class="wrapper">
+			<nav class="navbar">
+				<a  href="{% url 'dashboard' %}"><img class="logo" src="logo.png"></a>
+				<ul>
+					<li><a class="active" href="{% url 'dashboard' %}">Home</a></li>
+					<li><a href="{% url 'QRScanView' %}">Subir Passaporte COVID</a></li>
+				</ul>
+			</nav>
+			<div class="center">
+			<h1>App de Pasaportes COVID</h1>
+			<h2>creada por M22</h2>
+			<div class="buttons">
+			<button><a href="{% url 'StatsView' %}">Estadísticas de las vacunas</a></button>
+            
+            <div>
+                <ul>
+                    <li>
+                    
+                            Cantidad de Astrazeneca : {{ AstraZenecaCount }}<br>
+            
+                    </li>
+                    <li>
+                        Cantidad de Janssen : {{ JanssenCount }}<br>
+
+                    </li>
+                    <li>
+                        Cantidad de Moderna : {{ ModernaCount }}<br>
+                    </li>
+                    <li>
+                        Cantidad de Pfizer : {{ PfizerCount }}<br>
+                    </li>
+                </ul>
+            </div>
+		</div>
+		</div>
+</body>
+</html>
