@@ -25,7 +25,7 @@ pycryptodome==3.13.0
 PyMySQL==1.0.2
 pyparsing==3.0.7
 Pyrebase4==4.5.0
-python-jwt==3.3.2
+python-jwt==3.3.4
 qrcode==7.3.1
 requests==2.27.1
 requests-toolbelt==0.9.1
